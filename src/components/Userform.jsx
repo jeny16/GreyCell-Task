@@ -8,9 +8,11 @@ const Userform = () => {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [eligibilityMessage, setEligibilityMessage] = useState("");
+  const [showData, setShowData] = useState(false);
 
   useEffect(() => {
     const getData = JSON.parse(localStorage.getItem("UserData")) || [];
+
     setData(getData);
   }, []);
 
@@ -30,6 +32,12 @@ const Userform = () => {
 
   const AddValues = (e) => {
     e.preventDefault();
+
+    if (!name || !email || !phoneNo || !dob || !gender) {
+      alert("Please fill out all fields before submitting.");
+      return; // Stop form submission if fields are empty
+    }
+
     const newData = [
       ...data,
       {
@@ -50,7 +58,7 @@ const Userform = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+    <div className="bg-white rounded-lg shadow-lg p-8">
       <h1 className="text-center text-3xl font-semibold text-gray-800 mb-6">
         USER FORM
       </h1>
@@ -104,8 +112,8 @@ const Userform = () => {
             }}
           />
           {eligibilityMessage && (
-                <p className="text-gray-500 ml-2">{eligibilityMessage}</p>
-              )}
+            <p className="text-gray-500 ml-2">{eligibilityMessage}</p>
+          )}
         </div>
 
         <div>
@@ -122,7 +130,7 @@ const Userform = () => {
                 onChange={() => setGender("Male")}
                 className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
               />
-              
+
               <label className="ml-2 text-sm font-medium text-gray-700">
                 Male
               </label>
@@ -149,8 +157,39 @@ const Userform = () => {
         >
           Save
         </button>
+
       </form>
-            
+        <button onClick={() => setShowData(!showData)} className="mt-4 w-full">
+          {showData ? "Hide Data" : "view Data"}
+        </button>
+
+        {showData && (
+          <div>
+            <h1>SAVED DATA</h1>
+            <ul>
+              {data.map((user, id) => (
+                <li key={id} className="text-black mt-4 ">
+                  <p>
+                    <strong>NAME:</strong> {user.Name}
+                  </p>
+                  <p>
+                    <strong>EMAIL:</strong> {user.EmailId}
+                  </p>
+                  <p>
+                    <strong>PHONE NUMBER:</strong> {user.PhoneNo}
+                  </p>
+                  <p>
+                    <strong>DATE OF BIRTH:</strong> {user.Dob}
+                  </p>
+                  <p>
+                    <strong>GENDER:</strong> {user.Gender}{" "}
+                    {/* Corrected line */}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
     </div>
   );
 };
